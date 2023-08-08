@@ -18,6 +18,9 @@ Ex:
 (ExtSpoof)>rlt stealer.exe jpg
 
 Method 2: Python In-File Spoofing
+[ Transform the fake image, pdf to open into base64 code,
+and store it into the payload python file making the fake file open
+at the start of the payload ]
 (ExtSpoof)>ctm <filename|payload.py> <fake_file_to_open.pdf|png|etc>
 Ex:
 (ExtSpoof)>ctm chromestealer.py homework.pdf
