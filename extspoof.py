@@ -101,8 +101,8 @@ def ctm(command):
     argv2 = command[2]
 
     
-    input_data = argv1
-    output_file = argv2
+    input_data = argv2
+    output_file = argv1
     # Encode the PDF file into a string
     with open(input_data, "rb") as pdf_file:
         encoded_string = base64.b64encode(pdf_file.read()).decode("utf-8")
